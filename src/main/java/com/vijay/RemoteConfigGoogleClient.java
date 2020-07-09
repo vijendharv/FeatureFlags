@@ -18,7 +18,7 @@ import com.google.gson.JsonParser;
 import com.vijay.model.secretsmanager.Secret;
 import org.apache.log4j.Logger;
 
-public class GoogleRemoteConfigClient {
+public class RemoteConfigGoogleClient {
 
     //Google Service Account Credentials
     private final static String GOOGLE_SERVICE_ACCOUNT = "{\n" +
@@ -43,7 +43,7 @@ public class GoogleRemoteConfigClient {
     private final Logger logger = Logger.getLogger(this.getClass());
     private final RemoteConfigSecretsManagerClient remoteConfigSecretsManagerClient;
 
-    public GoogleRemoteConfigClient() {
+    public RemoteConfigGoogleClient() {
         remoteConfigSecretsManagerClient = new RemoteConfigSecretsManagerClient();
     }
 

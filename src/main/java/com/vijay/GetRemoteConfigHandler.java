@@ -1,9 +1,7 @@
 package com.vijay;
 
-import java.io.IOException;
 import java.time.Instant;
 
-import com.amazonaws.SdkClientException;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import org.apache.log4j.Logger;
@@ -11,19 +9,19 @@ import org.apache.log4j.Logger;
 public class GetRemoteConfigHandler implements RequestHandler<Void, Void> {
 
     private final RemoteConfigS3Client remoteConfigS3Client;
-    private final GoogleRemoteConfigClient googleRemoteConfigClient;
+    private final RemoteConfigGoogleClient remoteConfigGoogleClient;
     private final Logger logger = Logger.getLogger(this.getClass());
 
     public GetRemoteConfigHandler() {
         remoteConfigS3Client = new RemoteConfigS3Client();
-        googleRemoteConfigClient = new GoogleRemoteConfigClient();
+        remoteConfigGoogleClient = new RemoteConfigGoogleClient();
     }
 
     public Void handleRequest(Void input, Context context) {
 
         logger.info("Started invocation at: " + Instant.now().toEpochMilli());
         try {
-            String jsonString = googleRemoteConfigClient.getRemoteConfigFromFirebase();
+            String jsonString = remoteConfigGoogleClient.getRemoteConfigFromFirebase();
             //remoteConfigS3Client.updateRemoteConfigInS3(jsonString);
             remoteConfigS3Client.uploadObjectWithSSEEncryption(jsonString);
         } catch (Exception ex) {
