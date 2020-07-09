@@ -1,0 +1,7 @@
+prodUs:
+  s3BucketName: feature-flags-test-produs
+  region: us-west-2
+
+dev:
+  s3BucketName: feature-flags-test-dev
+  region: us-west-2

@@ -1,0 +1,73 @@
+service: feature-flags-test
+
+custom:
+  s3BucketName: ${file(./serverless-config.yml):${opt:stage, self:provider.stage}.s3BucketName}
+  region: ${file(./serverless-config.yml):${opt:stage, self:provider.stage}.region}
+
+plugins:
+  - serverless-pseudo-parameters
+
+provider:
+  name: aws
+  runtime: java8
+  stage: ${opt:stage, 'prodUs'}
+  region: ${opt:region, 'us-west-2'}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:GetObject
+      Resource: "arn:aws:s3:::${self:custom.s3BucketName}/*"
+    - Effect: Allow
+      Action:
+        - secretsmanager:DescribeSecret
+        - secretsmanager:List*
+      Resource: "*"
+    - Effect: Allow
+      Action:
+        - secretsmanager:*
+      Resource:
+        Fn::Join:
+          - ":"
+          - - arn:aws:secretsmanager
+            - "#{AWS::Region}"
+            - "#{AWS::AccountId}"
+            - secret:Firebase-Service-Account-??????
+
+  environment:
+    S3_BUCKET_NAME: ${self:custom.s3BucketName}
+    REGION: ${self:custom.region}
+
+package:
+  artifact: 'target/${self:service}-dev.jar'
+
+resources:
+  Resources:
+    RemoteConfigS3Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: "${self:custom.s3BucketName}"
+        BucketEncryption:
+          ServerSideEncryptionConfiguration:
+            - ServerSideEncryptionByDefault:
+                SSEAlgorithm: AES256
+        VersioningConfiguration:
+          Status: Enabled
+
+functions:
+  getParameter:
+    handler: com.vijay.GetParameterHandler
+    description: "Returns value of a parameter. Fetches and returns from S3 Bucket."
+    events:
+      - http:
+          path: /parameters/{parameter}
+          method: get
+  getRemoteConfig:
+    handler: com.vijay.GetRemoteConfigHandler
+    description: "Fetches remote config from firebase and loads it into an S3 Bucket."
+    events:
+      - schedule:
+          name: "GetRemoteConfigSchedule"
+          description: "Get Remote Config from Firebase every 15 minutes"
+          rate: cron(0/15 * * * ? *)
+          enabled: true
