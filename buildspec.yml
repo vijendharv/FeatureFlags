@@ -20,9 +20,7 @@ phases:
     commands:
       - echo Entered the build phase...
       - mvn clean package
-      - sls package
-      - sls deploy function -f getParameter
-      - sls deploy function -f getRemoteConfig
+      - sls deploy
     finally:
       - echo Completed the build phase...
 artifacts:

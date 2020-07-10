@@ -1,0 +1,21 @@
+service: feature-flags-test-resources
+
+custom:
+  s3BucketName: ${file(./serverless-config.yml):${opt:stage, self:provider.stage}.s3BucketName}
+  region: ${file(./serverless-config.yml):${opt:stage, self:provider.stage}.region}
+
+provider:
+  name: aws
+
+resources:
+  Resources:
+    RemoteConfigS3Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: "${self:custom.s3BucketName}"
+        BucketEncryption:
+          ServerSideEncryptionConfiguration:
+            - ServerSideEncryptionByDefault:
+                SSEAlgorithm: AES256
+        VersioningConfiguration:
+          Status: Enabled
