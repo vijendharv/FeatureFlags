@@ -24,5 +24,9 @@ phases:
       - sls deploy -f function getRemoteConfig
     finally:
       - echo Comnpleted the build phase...
+  artifacts:
+    files:
+      - './target/feature-flags-test-dev.jar'
+    name: feature-flags-test-$(date +%Y-%m-%d)
 
 
