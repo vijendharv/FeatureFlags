@@ -56,6 +56,7 @@ resources:
 
 functions:
   getParameter:
+    name: ${self:service}-${self:provider.stage}-getParameter
     handler: com.vijay.GetParameterHandler
     description: "Returns value of a parameter. Fetches and returns from S3 Bucket."
     events:
@@ -63,6 +64,7 @@ functions:
           path: /parameters/{parameter}
           method: get
   getRemoteConfig:
+    name: ${self:service}-${self:provider.stage}-getRemoteConfig
     handler: com.vijay.GetRemoteConfigHandler
     description: "Fetches remote config from firebase and loads it into an S3 Bucket."
     events:

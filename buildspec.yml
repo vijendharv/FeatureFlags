@@ -1,0 +1,28 @@
+version: 0.1
+
+phases:
+  install:
+    runtime-versions:
+      java: openjdk8
+      nodejs: 10
+    commands:
+      - echo Entered the install phase...
+      - npm install
+      - npm install -g serverless
+    finally:
+      - echo Completed the install phase...
+  pre_build:
+    commands:
+      - echo Entered the pre_build phase...
+    finally:
+      - echo Completed the pre_build phase...
+  build:
+    commands:
+      - echo Entered the build phase...
+      - mvn clean package
+      - sls deploy -f function getParameter
+      - sls deploy -f function getRemoteConfig
+    finally:
+      - echo Comnpleted the build phase...
+
+
