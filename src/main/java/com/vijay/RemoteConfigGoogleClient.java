@@ -35,7 +35,6 @@ public class RemoteConfigGoogleClient {
             "}";
 
     private final static String PROJECT_ID = "image-ocr-4a4e3";
-    //private final static String PROJECT_ID = "concurmobile-786e5"; //Concur Mobile Project ID
     private final static String BASE_URL = "https://firebaseremoteconfig.googleapis.com";
     private final static String REMOTE_CONFIG_ENDPOINT = "/v1/projects/" + PROJECT_ID + "/remoteConfig";
     private final static String[] SCOPES = { "https://www.googleapis.com/auth/firebase.remoteconfig" };
